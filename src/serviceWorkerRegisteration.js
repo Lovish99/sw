@@ -1,33 +1,54 @@
 import { Workbox } from "workbox-window";
 
-function listenForWaitingServiceWorker(reg, callback) {
-  function awaitStateChange() {
-    reg.installing.addEventListener("statechange", function () {
-      if (this.state === "installed") callback(reg);
-    });
-  }
-  if (!reg) return;
-  if (reg.waiting) return callback(reg);
-  if (reg.installing) awaitStateChange();
-  reg.addEventListener("updatefound", awaitStateChange);
-}
+// function listenForWaitingServiceWorker(reg, callback) {
+//   function awaitStateChange() {
+//     reg.installing.addEventListener("statechange", function () {
+//       if (this.state === "installed") callback(reg);
+//     });
+//   }
+//   if (!reg) return;
+//   if (reg.waiting) return callback(reg);
+//   if (reg.installing) awaitStateChange();
+//   reg.addEventListener("updatefound", awaitStateChange);
+// }
 
 export default function registerServiceWorker() {
   //   if ("production" !== "production webpack --mode=development") {
   //     return;
   //   }
   if ("serviceWorker" in navigator) {
-    const wb = new Workbox("/sw.js");
+    // const wb = new Workbox("/sw.js");
 
-    wb.addEventListener("activated", (event) => {
-      // `event.isUpdate` will be true if another version of the service
-      // worker was controlling the page when this version was registered.
-      if (!event.isUpdate) {
-        console.log("Service worker activated for the first time!");
-        alert("Service worker activated for the first time!");
-        // If your service worker is configured to precache assets, those
-        // assets should all be available now.
-      } else {
+    // wb.addEventListener("activated", (event) => {
+    //   // `event.isUpdate` will be true if another version of the service
+    //   // worker was controlling the page when this version was registered.
+    //   if (!event.isUpdate) {
+    //     console.log("Service worker activated for the first time!");
+    //     alert("Service worker activated for the first time!");
+    //     // If your service worker is configured to precache assets, those
+    //     // assets should all be available now.
+    //   } else {
+    //     if (
+    //       window.confirm("New App update is available  , Click ok to refersh")
+    //     ) {
+    //       window.location.reload();
+    //     }
+    //   }
+    // });
+
+    // // Register the service worker after event listeners have been added.
+    // wb.register();
+
+    //first
+    const wb = new Workbox("sw.js");
+    console.log("abs1");
+    // wb.addEventListener("activated", (event) => {
+    //   console.log("aa");
+    // });
+    wb.addEventListener("installed", (event) => {
+      console.log("abi1");
+      if (event.isUpdate) {
+        console.log("abi2");
         if (
           window.confirm("New App update is available  , Click ok to refersh")
         ) {
@@ -35,27 +56,6 @@ export default function registerServiceWorker() {
         }
       }
     });
-
-    // Register the service worker after event listeners have been added.
-    wb.register();
-
-    //first
-    //   const wb = new Workbox("sw.js");
-    //   console.log("abs1");
-    //   // wb.addEventListener("activated", (event) => {
-    //   //   console.log("aa");
-    //   // });
-    // wb.addEventListener("installed", (event) => {
-    //   console.log("abi1");
-    //   if (event.isUpdate) {
-    //     console.log("abi2");
-    //     // if (
-    //     //   window.confirm("New App update is available  , Click ok to refersh")
-    //     // ) {
-    //     //   window.location.reload();
-    //     // }
-    //   }
-    // });
     // wb.addEventListener("controlling", (event) => {
     //   console.log("abc1");
     //   if (event.isUpdate) {
